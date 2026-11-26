@@ -3,8 +3,8 @@
  * Publishes every package whose version isn't on npm yet, dependencies
  * first, with `yarn npm publish`: unlike the npm publish changesets would run,
  * it replaces the workspace: ranges between our packages with real versions
- * and runs each package's prepack. Tags each release, and prints the line
- * changesets/action reads to create its GitHub release.
+ * and runs each package's prepack. Tags each release and makes a GitHub
+ * release of it (with gh), its notes from the package's CHANGELOG.
  *
  *   node scripts/publish.mjs [--dry-run]
  */
@@ -44,6 +44,24 @@ const visit = (p, seen = new Set()) => {
 };
 packages.filter(p => !p.private).forEach(p => visit(p));
 
+/** This version's section of the package's CHANGELOG, and where it is. */
+const notes = p => {
+  const npm = `https://www.npmjs.com/package/${p.name}/v/${p.version}`;
+  let section = '';
+  try {
+    const changelog = readFileSync(join(p.dir, 'CHANGELOG.md'), 'utf8');
+    const start = changelog.indexOf(`## ${p.version}`);
+    if (start >= 0) {
+      const rest = changelog.slice(start + `## ${p.version}`.length);
+      const end = rest.search(/\n## /);
+      section = (end >= 0 ? rest.slice(0, end) : rest).trim();
+    }
+  } catch {
+    // No changelog yet: the first release.
+  }
+  return `${section || 'First release.'}\n\n${npm}`;
+};
+
 const published = async (name, version) => {
   const res = await fetch(
     `https://registry.npmjs.org/${name.replace('/', '%2f')}/${version}`,
@@ -65,6 +83,5 @@ for (const p of order) {
   const tag = `${p.name}@${p.version}`;
   run('git', ['tag', tag]);
   run('git', ['push', 'origin', tag]);
-  // changesets/action makes a GitHub release of each of these lines.
-  console.log(`🦋  New tag: ${tag}`);
+  run('gh', ['release', 'create', tag, '--title', tag, '--notes', notes(p)]);
 }

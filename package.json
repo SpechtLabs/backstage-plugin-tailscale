@@ -29,7 +29,7 @@
   "devDependencies": {
     "@backstage/cli": "^0.36.8",
     "@backstage/cli-defaults": "^0.1.8",
-    "@changesets/cli": "^2.29.0",
+    "@changesets/cli": "^3.0.3",
     "@jest/environment-jsdom-abstract": "^30.5.0",
     "@types/jest": "^30.0.0",
     "jest": "^30.5.0",
