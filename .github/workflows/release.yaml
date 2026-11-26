@@ -43,8 +43,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Yarn publishes (yarn npm publish) through npm's trusted
-          # publishing: with no token configured, it trades this job's OIDC
-          # token for a short-lived npm one. Each package trusts this
-          # repository's release.yaml on npmjs.com.
-          YARN_NPM_PUBLISH_PROVENANCE: 'true'
+          # scripts/publish.mjs publishes with npm (11.5.1 or newer) through
+          # npm's trusted publishing: it trades this job's OIDC token
+          # (id-token: write) for a short-lived npm one. Each package trusts
+          # this repository's release.yaml on npmjs.com.

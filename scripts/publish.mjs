@@ -1,19 +1,21 @@
 #!/usr/bin/env node
 /*
  * Publishes every package whose version isn't on npm yet, dependencies
- * first, with `yarn npm publish`: unlike the npm publish changesets would run,
- * it replaces the workspace: ranges between our packages with real versions
- * and runs each package's prepack. Tags each release and makes a GitHub
- * release of it (with gh), its notes from the package's CHANGELOG.
+ * first. `yarn pack` makes the tarball: it replaces the workspace: ranges
+ * between our packages with real versions and runs each package's prepack.
+ * npm publishes it, through npm's trusted publishing in GitHub Actions (the
+ * job's OIDC token, no npm token) and with provenance. Tags each release and
+ * makes a GitHub release of it (with gh), its notes from the CHANGELOG.
  *
  *   node scripts/publish.mjs [--dry-run]
  */
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync, rmSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 const dryRun = process.argv.includes('--dry-run');
-const provenance = process.env.YARN_NPM_PUBLISH_PROVENANCE === 'true';
+// Provenance needs the OIDC token GitHub Actions provides.
+const provenance = process.env.GITHUB_ACTIONS === 'true';
 const run = (cmd, args, opts = {}) =>
   execFileSync(cmd, args, { stdio: 'inherit', ...opts });
 
@@ -75,10 +77,15 @@ for (const p of order) {
     continue;
   }
   console.log(`Publishing ${p.name}@${p.version}${dryRun ? ' (dry run)' : ''}`);
-  const args = ['npm', 'publish', '--access', 'public'];
+  const tarball = resolve(
+    `${p.name.replace(/^@/, '').replace('/', '-')}-${p.version}.tgz`,
+  );
+  run('yarn', ['pack', '--out', tarball], { cwd: p.dir });
+  const args = ['publish', tarball, '--access', 'public'];
   if (provenance) args.push('--provenance');
   if (dryRun) args.push('--dry-run');
-  run('yarn', args, { cwd: p.dir });
+  run('npm', args);
+  rmSync(tarball);
   if (dryRun) continue;
   const tag = `${p.name}@${p.version}`;
   run('git', ['tag', tag]);
