@@ -1,6 +1,6 @@
 {
   "name": "@spechtlabs/backstage-plugin-tailscale-common",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared by the Tailscale Backstage plugin's packages: the Tailscale entity kind, its validation and relations, and the API types.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/SpechtLabs/backstage-plugin-tailscale/tree/main/plugins/tailscale-common#readme",

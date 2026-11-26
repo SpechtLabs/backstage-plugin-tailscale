@@ -1,6 +1,6 @@
 {
   "name": "@spechtlabs/backstage-plugin-tailscale-backend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Renders Tailscale tailnet policies from the Backstage catalog, serves them to the Tailscale frontend plugin, and publishes them to GitHub as a pull request or a push.",
   "license": "Apache-2.0",
   "homepage": "https://github.com/SpechtLabs/backstage-plugin-tailscale/tree/main/plugins/tailscale-backend#readme",
