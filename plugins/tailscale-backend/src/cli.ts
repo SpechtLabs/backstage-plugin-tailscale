@@ -107,6 +107,11 @@ async function main() {
   }
   const [appliedFile, ...dirs] = positional;
   if (!appliedFile || !dirs.length) usage();
+  for (const p of [appliedFile, ...dirs]) {
+    if (!fs.existsSync(p)) usage(`${p} doesn't exist`);
+  }
+  const notDirs = dirs.filter(d => !fs.statSync(d).isDirectory());
+  if (notDirs.length) usage(`not a directory: ${notDirs.join(', ')}`);
 
   const entities = load(dirs);
   relate(entities);
