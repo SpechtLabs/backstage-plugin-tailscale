@@ -1,0 +1,4 @@
+# Local tooling, exact pins. Renovate keeps them current.
+[tools]
+node = "24.22.3"
+yarn = "4.19.0"

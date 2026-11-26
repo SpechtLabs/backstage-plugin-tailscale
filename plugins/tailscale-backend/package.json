@@ -1,0 +1,87 @@
+{
+  "name": "@spechtlabs/backstage-plugin-tailscale-backend",
+  "version": "0.1.0",
+  "description": "Renders Tailscale tailnet policies from the Backstage catalog, serves them to the Tailscale frontend plugin, and publishes them to GitHub as a pull request or a push.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SpechtLabs/backstage-plugin-tailscale/tree/main/plugins/tailscale-backend#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpechtLabs/backstage-plugin-tailscale.git",
+    "directory": "plugins/tailscale-backend"
+  },
+  "bugs": {
+    "url": "https://github.com/SpechtLabs/backstage-plugin-tailscale/issues"
+  },
+  "keywords": [
+    "backstage",
+    "backstage-plugin",
+    "tailscale",
+    "tailnet",
+    "acl",
+    "policy"
+  ],
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "publishConfig": {
+    "access": "public",
+    "main": "dist/index.cjs.js",
+    "types": "dist/index.d.ts"
+  },
+  "backstage": {
+    "role": "backend-plugin",
+    "pluginId": "tailscale",
+    "pluginPackages": [
+      "@spechtlabs/backstage-plugin-catalog-backend-module-tailscale",
+      "@spechtlabs/backstage-plugin-tailscale",
+      "@spechtlabs/backstage-plugin-tailscale-backend",
+      "@spechtlabs/backstage-plugin-tailscale-common"
+    ]
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "bin",
+    "config.d.ts"
+  ],
+  "scripts": {
+    "build": "backstage-cli package build",
+    "lint": "backstage-cli package lint",
+    "test": "backstage-cli package test",
+    "clean": "backstage-cli package clean",
+    "prepack": "backstage-cli package prepack",
+    "postpack": "backstage-cli package postpack"
+  },
+  "dependencies": {
+    "@backstage/backend-plugin-api": "^1.12.0",
+    "@backstage/catalog-model": "^1.10.3",
+    "@backstage/integration": "^2.2.0",
+    "@backstage/plugin-catalog-node": "^3.0.0",
+    "@backstage/types": "^1.2.2",
+    "@spechtlabs/backstage-plugin-tailscale-common": "workspace:^",
+    "express-promise-router": "^4.1.1",
+    "jsonc-parser": "^2.2.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.36.8"
+  },
+  "configSchema": "config.d.ts",
+  "bin": {
+    "backstage-tailscale-diff": "bin/backstage-tailscale-diff"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./cli": "./src/cli.ts",
+    "./package.json": "./package.json"
+  },
+  "typesVersions": {
+    "*": {
+      "cli": [
+        "src/cli.ts"
+      ],
+      "package.json": [
+        "package.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "backstage-plugin-tailscale-root",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Tailscale for Backstage: tailnet policies kept in the software catalog.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": "22 || 24"
+  },
+  "workspaces": [
+    "plugins/*"
+  ],
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:full": "tsc --skipLibCheck false --incremental false",
+    "build": "backstage-cli repo build",
+    "clean": "backstage-cli repo clean",
+    "test": "backstage-cli repo test",
+    "test:all": "backstage-cli repo test --coverage",
+    "lint": "backstage-cli repo lint --since origin/main",
+    "lint:all": "backstage-cli repo lint",
+    "prettier:check": "prettier --check .",
+    "fix": "backstage-cli repo fix",
+    "tailscale:diff": "node --require @backstage/cli/config/nodeTransform.cjs plugins/tailscale-backend/src/cli.ts",
+    "changeset": "changeset",
+    "version-packages": "changeset version && yarn install --mode update-lockfile",
+    "release": "yarn tsc && yarn build && node scripts/publish.mjs"
+  },
+  "devDependencies": {
+    "@backstage/cli": "^0.36.8",
+    "@backstage/cli-defaults": "^0.1.8",
+    "@changesets/cli": "^2.29.0",
+    "@jest/environment-jsdom-abstract": "^30.5.0",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.5.0",
+    "jsdom": "^27.1.0",
+    "prettier": "^2.3.2",
+    "typescript": "~5.9.0"
+  },
+  "resolutions": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18"
+  },
+  "prettier": "@backstage/cli/config/prettier",
+  "packageManager": "yarn@4.13.0"
+}

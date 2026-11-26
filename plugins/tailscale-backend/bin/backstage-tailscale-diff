@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+// Renders a tailnet policy from local catalog checkouts and compares it with
+// a policy file: see the package README.
+require('../dist/cli.cjs.js');
