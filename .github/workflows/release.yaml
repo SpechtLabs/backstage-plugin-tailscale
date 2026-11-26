@@ -47,5 +47,3 @@ jobs:
           # npm's trusted publishing: it trades this job's OIDC token
           # (id-token: write) for a short-lived npm one. Each package trusts
           # this repository's release.yaml on npmjs.com.
-          # npm logs the OIDC exchange's outcome only at verbose level.
-          npm_config_loglevel: verbose
