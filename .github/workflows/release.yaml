@@ -15,28 +15,22 @@ concurrency: release
 permissions:
   contents: write # the release commit and tags
   pull-requests: write # the release pull request
-  id-token: write # npm provenance
+  id-token: write # npm trusted publishing and provenance
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
 
       - run: corepack enable
       - run: yarn install --immutable
 
       - name: Release pull request, or publish
-        # Without an NPM_TOKEN (the repository secret), nothing to publish
-        # with.
-        if: env.NPM_TOKEN != ''
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
           version-script: yarn version-packages
@@ -49,6 +43,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Yarn publishes (yarn npm publish), with its own settings.
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Yarn publishes (yarn npm publish) through npm's trusted
+          # publishing: with no token configured, it trades this job's OIDC
+          # token for a short-lived npm one. Each package trusts this
+          # repository's release.yaml on npmjs.com.
           YARN_NPM_PUBLISH_PROVENANCE: 'true'
