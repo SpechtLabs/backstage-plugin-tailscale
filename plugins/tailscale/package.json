@@ -38,7 +38,8 @@
     ]
   },
   "sideEffects": [
-    "*.css"
+    "*.css",
+    "*.css.esm.js"
   ],
   "files": [
     "dist"
